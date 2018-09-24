@@ -1,27 +1,31 @@
 const express = require('express');
 const bodyParser= require('body-parser')
 const app = express();
-const port = process.env.PORT || 5000;
-const MongoClient = require('mongodb').MongoClient
+const port = process.env.PORT || 3000;
+const MongoClient = require('mongodb').MongoClient;
 var db;
-const dbLink='mongodb://MainUser:QYv8mTFjLg2cCs4@ds243812.mlab.com:43812/malkale'
 
+const dbLink='mongodb://MainUser:QYv8mTFjLg2cCs4@ds243812.mlab.com:43812/malkale'
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
-app.use(express.static('./build'))
+app.use(express.static('./build'));
 
+console.log("Connecting to mongo");
 
-MongoClient.connect(dbLink, (err, mongoServer) => {
+MongoClient.connect(dbLink,{ useNewUrlParser: true }, (err, mongoServer) => {
   if (err){
      return console.log(err)
    }
 
+  console.log("connected to mongo");
   db = mongoServer.db('malkale')
 
-  // console.log that your server is up and running
+  console.log("Started express server");
   app.listen(port, () => console.log(`Listening on port ${port}`));
+
 });
+
 
 // create a GET route
 app.get('/express_backend', (req, res) => {
